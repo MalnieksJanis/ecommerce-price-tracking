@@ -1,0 +1,18 @@
+import sqlite3
+import pandas as pd
+
+# Savienojamies ar SQLite datubāzi
+conn = sqlite3.connect('products.db')
+c = conn.cursor()
+
+# Izveidojam tabulu, ja tā vēl nepastāv
+c.execute('''CREATE TABLE IF NOT EXISTS products (product_name TEXT, price REAL)''')
+
+# Ielādējam datus no CSV
+df = pd.read_csv('data/cleaned/products_data_cleaned.csv')
+
+# Ievietojam datus datubāzē
+df.to_sql('products', conn, if_exists='replace', index=False)
+
+conn.commit()
+conn.close()
